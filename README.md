@@ -98,18 +98,25 @@ x-auth-token: your_jwt_token
 
 ## Requests
 
-## User Registration:
+## Sample Request: User Registration
 
-POST /auth/register
-Content-Type: application/json
+**POST** `/auth/register`  
+**Headers:**  
+`Content-Type: application/json`
 
+**Body:**
+
+```json
 {
-"email": "user@example.com",
-"password": "securePassword123",
-"firstName": "John",
-"lastName": "Doe",
-"phone": "+18761234567"
+  "email": "user@example.com",
+  "password": "securePassword123",
+  "firstName": "John",
+  "lastName": "Doe",
+  "phone": "+18761234567"
 }
+
+
+
 
 ## Roadmap:
 
@@ -120,6 +127,7 @@ Content-Type: application/json
     •	i18n (multi-language support)
     •	Mobile-ready API version 2
 
-## Roadmap:
+## About:
 
 Created by Mc Bellum Lawrence
+```
