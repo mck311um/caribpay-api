@@ -1,0 +1,23 @@
+model ExchangeRate {
+  id              String   @default(uuid())
+  baseCurrency    String
+  targetCurrency  String
+  rate            Decimal
+  lastUpdated     DateTime @default(now())
+  
+  @@id([baseCurrency, targetCurrency])
+}
+
+model Transaction {
+  id               String   @id @default(uuid())
+  senderAccountId   String
+  senderAccount     Account  @relation("senderTransactions", fields: [senderAccountId], references: [id])
+  receiverAccountId String
+  receiverAccount   Account  @relation("receiverTransactions", fields: [receiverAccountId], references: [id])
+  amount           Decimal
+  fee              Decimal  @default(0)
+  exchangeRate     Decimal?
+  status           String   @default("PENDING") 
+  createdAt        DateTime @default(now())
+  completedAt      DateTime?
+}
