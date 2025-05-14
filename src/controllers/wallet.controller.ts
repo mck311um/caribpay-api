@@ -333,10 +333,64 @@ const getTransactionHistory = async (req: Request, res: Response): Promise<any> 
   }
 };
 
+const getAccountBalance = async (req: Request, res: Response): Promise<any> => {
+  const userId = req.user?.id;
+  const { accountNumber } = req.params;
+  try {
+    const account = await prisma.account.findUnique({
+      where: { accountNumber },
+      include: { user: true },
+    });
+
+    if (!account) return res.status(404).json({ message: 'Account not found' });
+    if (account.userId !== userId) return res.status(403).json({ message: 'Unauthorized' });
+    if (account.isDeleted) return res.status(400).json({ message: 'Account is deleted' });
+
+    return res.status(200).json({
+      message: 'Wallet balance retrieved successfully',
+      data: { balance: account.balance },
+    });
+  } catch (error: any) {
+    errorUtil.handleError(error, res, 'retrieving wallet balance');
+  }
+};
+
+const deleteAccount = async (req: Request, res: Response): Promise<any> => {
+  const userId = req.user?.id;
+  const { accountNumber } = req.params;
+  try {
+    const account = await prisma.account.findUnique({
+      where: { accountNumber },
+      include: { user: true },
+    });
+
+    if (!account) return res.status(404).json({ message: 'Account not found' });
+    if (account.userId !== userId) return res.status(403).json({ message: 'Unauthorized' });
+    if (account.isDeleted) return res.status(400).json({ message: 'Account is already deleted' });
+    if (account.balance.gt(0.0))
+      return res.status(400).json({ message: 'Account balance must be 0 before deletion' });
+    if (account.isPrimary)
+      return res.status(400).json({ message: 'Primary account cannot be deleted' });
+
+    await prisma.account.update({
+      where: { id: account.id },
+      data: { isDeleted: true },
+    });
+
+    return res.status(200).json({
+      message: 'Account deleted successfully',
+    });
+  } catch (error: any) {
+    errorUtil.handleError(error, res, 'deleting account');
+  }
+};
+
 export default {
   transfer,
   internalTransfer,
   fundAccount,
   updateFunding,
   getTransactionHistory,
+  getAccountBalance,
+  deleteAccount,
 };
