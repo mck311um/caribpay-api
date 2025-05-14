@@ -103,8 +103,9 @@ pip install awsebcli
 ```
 
 ### 2. Initialize the Project
-
+```bash
 eb init -p node.js caribpay-api --region us-east-1
+```
 Follow the prompts:
 
 - Choose your AWS access key
