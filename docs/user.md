@@ -13,14 +13,14 @@ Updates user profile information and creates a primary account for the user in t
 ### Request Format:
 
 ```http
-    PATCH /api/v1/user/update/
+PATCH /api/v1/user/update/
 ```
 
 ### Request Headers:
 
 ```http
-    x-auth-token: <your_jwt_token>
-    Content-Type: application/json
+x-auth-token: <your_jwt_token>
+Content-Type: application/json
 ```
 
 ### Request Body Parameters:
