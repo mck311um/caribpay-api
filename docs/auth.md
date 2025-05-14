@@ -10,7 +10,6 @@ This endpoint is used to register a new user by providing the necessary user det
 
 ```http
 POST /api/v1/auth/register
-Content-Type: application/json
 ```
 
 ```json
