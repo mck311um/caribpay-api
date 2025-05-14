@@ -1,0 +1,13 @@
+enum IdType {
+  PASSPORT
+  DRIVERS_LICENSE
+  NATIONAL_ID
+  VOTERS_ID
+  OTHER
+}
+
+enum RiskRating {
+  LOW
+  MEDIUM
+  HIGH
+}

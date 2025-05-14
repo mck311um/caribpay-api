@@ -14,16 +14,16 @@ A Caribbean financial services API built with Express.js, TypeScript, and Prisma
 
 ## Technologies
 
-| Component      | Technology                    |
-| -------------- | ----------------------------- |
-| Backend        | Node.js + Express.js          |
-| Database       | PostgreSQL + Prisma ORM       |
-| Language       | TypeScript                    |
-| Authentication | JWT with refresh tokens       |
-| API Security   | Helmet, CORS, rate limiting   |
-| Testing        | Jest + Supertest              |
-| Documentation  | OpenAPI/Swagger (coming soon) |
-| CI/CD          | GitHub Actions                |
+| Component      | Technology                            |
+| -------------- | ------------------------------------- |
+| Backend        | Node.js + Express.js                  |
+| Database       | PostgreSQL + Prisma ORM               |
+| Language       | TypeScript                            |
+| Authentication | JWT with refresh tokens               |
+| API Security   | Helmet, CORS, rate limiting           |
+| Testing        | Jest + Supertest                      |
+| Documentation  | Markdown (`/docs`), Swagger (planned) |
+| DevOps         | GitHub Actions, AWS Elastic Beanstalk |
 
 ## Getting Started
 
@@ -44,16 +44,27 @@ A Caribbean financial services API built with Express.js, TypeScript, and Prisma
    ```
 
 2. Install dependencies:
+
+   ```bash
    npm install
+   ```
 
 3. Set up environment variables:
+
+   ```bash
    cp .env.example .env
+   ```
 
 4. Set up database
+
+   ```bash
    ./migrate.sh
+   ```
 
 5. Start the development server:
+   ```bash
    npm run dev
+   ```
 
 ### Environment Setup
 
@@ -103,18 +114,22 @@ pip install awsebcli
 ```
 
 ### 2. Initialize the Project
+
 ```bash
 eb init -p node.js caribpay-api --region us-east-1
 ```
+
 Follow the prompts:
 
 - Choose your AWS access key
 - Create or select a keypair
 
 ### 3. Create the Environment
+
 ```bash
 eb create caribpay-env
 ```
+
 ### 4 Add Environment Variables
 
 You can configure secrets in the AWS Console under:

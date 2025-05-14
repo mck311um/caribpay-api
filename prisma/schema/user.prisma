@@ -1,12 +1,25 @@
 model User {
-  id         String    @id @default(uuid())
-  email      String    @unique
-  password   String
-  firstName  String
-  lastName   String
-  phone      String
-  verified   Boolean   @default(false)
-  accounts   Account[]
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id              String    @id @default(dbgenerated("gen_random_uuid()"))
+  email           String    @unique
+  password        String
+  firstName        String
+  lastName        String
+  phone           String    @unique
+  verified         Boolean   @default(false)
+  dateOfBirth     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  nationality     String?
+  idType          IdType?
+  idNumber        String?    @unique
+  idDocumentUrl   String?
+  addressLine1    String?
+  addressLine2    String?
+  city            String?
+  country         String?
+  riskRating      RiskRating @default(LOW)
+
+  accounts        Account[]
+
+  @@unique([firstName, lastName, dateOfBirth])
 }
