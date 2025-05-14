@@ -92,6 +92,60 @@ npm run prisma:generate
 The API follows RESTful principles and uses JSON for requests and responses.
 For full API reference, see [docs/api-reference.md](docs/api-reference.md)
 
-## About:
+## Deployment to AWS
 
-Created by Mc Bellum Lawrence
+You can deploy the CaribPay API to the cloud using AWS Elastic Beanstalk:
+
+### 1. Install Elastic Beanstalk CLI
+
+```bash
+pip install awsebcli
+```
+
+### 2. Initialize the Project
+
+eb init -p node.js caribpay-api --region us-east-1
+Follow the prompts:
+
+- Choose your AWS access key
+- Create or select a keypair
+
+### 3. Create the Environment
+
+eb create caribpay-env
+
+### 4 Add Environment Variables
+
+You can configure secrets in the AWS Console under:
+Elastic Beanstalk → Configuration → Software → Environment Properties
+
+Add:
+
+- DATABASE_URL
+- JWT_SECRET
+- PORT
+- NODE_ENV=production
+
+### 5 Deploy
+
+After deployment, your app will be live at:
+`http://caribpay-env.eba-xyz123.us-east-1.elasticbeanstalk.com`
+
+---
+
+### Optional
+
+You can also use the `./deploy.sh` script to automate setup and deployment.
+
+> **Note:** Before running the script, make sure to **update the environment variables** inside `deploy.sh` with your own `DATABASE_URL`, `JWT_SECRET`, and other sensitive values.
+
+```bash
+chmod +x deploy.sh
+./deploy.sh
+```
+
+---
+
+## About
+
+Created by Mc Kellum Lawrence
