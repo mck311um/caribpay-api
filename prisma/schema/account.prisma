@@ -12,8 +12,25 @@ model Account {
   isDeleted             Boolean      @default(false)
 
   user                  User          @relation(fields: [userId], references: [id])
-  transactions          Transaction[] @relation("senderTransactions")
-  receivedTransactions  Transaction[] @relation("receiverTransactions")
+  transactions          Transaction[] 
   country               Country?      @relation(fields: [countryId], references: [id])
   currency              Currency      @relation(fields: [currencyId], references: [id])
+}
+
+model Transaction {
+  id                String   @id @default(uuid())
+  accountId         String
+  amount            Decimal
+  fee               Decimal  @default(0)
+  transactionType   TransactionType
+  status            String   @default("PENDING") 
+  direction        TransactionDirection
+  createdAt         DateTime @default(now())
+  completedAt       DateTime?
+  reference         String?
+  transferGroupId   String?
+
+
+
+  account           Account[]
 }

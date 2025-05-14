@@ -11,7 +11,7 @@ let countryId: string;
 beforeAll(async () => {
   await prisma.account.deleteMany();
   await prisma.user.deleteMany({ where: { email: 'updateuser@example.com' } });
-  await prisma.country.deleteMany({ where: { name: 'Testland' } });
+  await prisma.country.deleteMany();
 
   const currency = await prisma.currency.upsert({
     where: { code: 'TSD' },

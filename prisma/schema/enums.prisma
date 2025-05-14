@@ -11,3 +11,16 @@ enum RiskRating {
   MEDIUM
   HIGH
 }
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+  TRANSFER
+  TRANSFER_INTERNAL
+  PAYMENT
+}
+
+enum TransactionDirection {
+  INCOMING
+  OUTGOING
+}
