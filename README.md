@@ -55,13 +55,17 @@ A Caribbean financial services API built with Express.js, TypeScript, and Prisma
 5. Start the development server:
    npm run dev
 
-### Environment Variables
+### Environment Setup
 
-Create a `.env` file with these variables:
-DATABASE_URL="postgresql://user:password@localhost:5432/caribpay?schema=public"
-JWT_SECRET="rT9#Lx3!KpV2$wTmZeR1cY&Hs9AfE0oIbMnQXdG5Jh7BtCvLrU4WyN6^uLgPzMj6@qTkXv#E!7LdRp0Cf3sHaBn$YcUw!AvZxN8Rb%Kj5M^tZrXe6DoLqP#Cv"
-PORT=3000
-NODE_ENV="development"
+1. Create a new `.env` file at the root of the project.
+2. Copy the contents of `.env.example` into `.env`:
+3. Make sure .env is listed in your .gitignore so that real secrets are never committed to GitHub.
+
+So your real secrets never get pushed to GitHub.
+
+```bash
+cp .env.example .env
+```
 
 ### Development Scripts
 
@@ -86,48 +90,8 @@ npm run prisma:generate
 ### API Documentation
 
 The API follows RESTful principles and uses JSON for requests and responses.
-
-## Base URL
-
-http://localhost:3000/api/v1
-
-## Authentication
-
-Add your JWT token in the headers:
-x-auth-token: your_jwt_token
-
-## Requests
-
-## Sample Request: User Registration
-
-**POST** `/auth/register`  
-**Headers:**  
-`Content-Type: application/json`
-
-**Body:**
-
-```json
-{
-  "email": "user@example.com",
-  "password": "securePassword123",
-  "firstName": "John",
-  "lastName": "Doe",
-  "phone": "+18761234567"
-}
-
-
-
-
-## Roadmap:
-
-    •	Multi-currency wallet support
-    •	Secure transfers with validations
-    •	Exchange rate service integration
-    •	PDF statement exports
-    •	i18n (multi-language support)
-    •	Mobile-ready API version 2
+For full API reference, see [docs/api-reference.md](docs/api-reference.md)
 
 ## About:
 
 Created by Mc Bellum Lawrence
-```
