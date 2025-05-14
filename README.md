@@ -112,9 +112,9 @@ Follow the prompts:
 - Create or select a keypair
 
 ### 3. Create the Environment
-
+```bash
 eb create caribpay-env
-
+```
 ### 4 Add Environment Variables
 
 You can configure secrets in the AWS Console under:
