@@ -16,6 +16,6 @@ All secured routes require this header:
 - [Authentication Endpoints](./auth.md)
 - [Wallet Endpoints](./wallet.md)
 - [Transaction Endpoints](./transactions.md)
-- [User Profile Endpoints](./users.md)
+- [User Profile Endpoints](./user.md)
 
 ---
