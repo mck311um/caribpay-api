@@ -7,7 +7,8 @@
     "start": "ts-node src/server.ts",
     "dev": "nodemon src/server.ts",
     "build": "tsc",
-    "test": "cross-env NODE_ENV=test jest"
+    "test": "cross-env NODE_ENV=test jest",
+    "test:live": "cross-env NODE_ENV=production dotenv -e .env jest"
   },
   "keywords": [],
   "author": "",

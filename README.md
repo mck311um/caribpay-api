@@ -98,6 +98,27 @@ npm run prisma:generate
 
 ```
 
+### Running Tests
+
+To run tests, make sure to configure your test environment properly by setting up a separate .env.test file and use the correct testing framework.
+
+1. Create .env.test
+   Create a `.env.test` file for your testing environment to ensure that tests run using a separate database and configuration. For example:
+
+2. Testing with Jest & Supertest
+   You can run tests using the test script, which loads the .env.test environment file.
+
+```bash
+npm run test
+```
+
+This will run your tests using the environment variables in .env.test.
+If you’d like to run tests using the live environment (for example, to test production configurations), you can use the test:live script:
+
+```bash
+npm run test:live
+```
+
 ### API Documentation
 
 The API follows RESTful principles and uses JSON for requests and responses.
