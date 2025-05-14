@@ -13,7 +13,7 @@ Transfers funds between two user accounts. Can include currency conversion if ac
 ### Request Format:
 
 ```http
-PATCH /api/v1/wallet/transfer
+POST /api/v1/wallet/transfer
 ```
 
 ### Request Headers:
@@ -267,7 +267,7 @@ Content-Type: application/json
 ### Request Format:
 
 ```http
-PATH /api/v1/wallet/fund/:id
+PATCH /api/v1/wallet/fund/:id
 ```
 
 ### Request Headers:
