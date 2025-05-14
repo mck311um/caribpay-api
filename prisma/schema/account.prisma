@@ -1,12 +1,19 @@
 model Account {
-  id           String       @id @default(uuid())
-  userId       String
-  user         User         @relation(fields: [userId], references: [id])
-  currency     String       // ISO codes: USD, JMD, TTD, etc.
-  balance      Decimal      @default(0)
-  accountNumber String
-  transactions Transaction[] @relation("senderTransactions")
-  receivedTransactions Transaction[] @relation("receiverTransactions")
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  id                    String       @id @default(uuid())
+  name                  String
+  userId                String
+  currencyId            String       
+  countryId             String?
+  balance               Decimal      @default(0)
+  accountNumber         String       @unique
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+  isPrimary             Boolean      @default(false)
+  isDeleted             Boolean      @default(false)
+
+  user                  User          @relation(fields: [userId], references: [id])
+  transactions          Transaction[] @relation("senderTransactions")
+  receivedTransactions  Transaction[] @relation("receiverTransactions")
+  country               Country?      @relation(fields: [countryId], references: [id])
+  currency              Currency      @relation(fields: [currencyId], references: [id])
 }

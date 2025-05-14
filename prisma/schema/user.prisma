@@ -16,10 +16,12 @@ model User {
   addressLine1    String?
   addressLine2    String?
   city            String?
-  country         String?
-  riskRating      RiskRating @default(LOW)
+  countryId       String?
+  isDeleted       Boolean   @default(false)
 
-  accounts        Account[]
+  accounts       Account[]
+  country        Country? @relation(fields: [countryId], references: [id])
 
   @@unique([firstName, lastName, dateOfBirth])
+
 }
