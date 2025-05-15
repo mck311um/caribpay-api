@@ -1,4 +1,6 @@
-### API Documentation
+# API Documentation
+
+The API follows RESTful principles and uses JSON for requests and responses.
 
 ## Base URL
 
