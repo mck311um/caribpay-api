@@ -21,7 +21,7 @@ Elastic Beanstalk needs permissions to manage resources like S3, RDS, and CloudW
 #### 1. Install Elastic Beanstalk CLI
 
 ```bash
-npm install awsebcli
+pip3 install awsebcli --upgrade --user
 ```
 
 #### 2. Configure AWS credentials:
@@ -54,17 +54,26 @@ eb create caribpay-env
 
 #### 5. Add Environment Variables
 
-You can configure secrets in the AWS Console under:
-Elastic Beanstalk → Configuration → Software → Environment Properties
+```bash
+eb setenv DATABASE_URL='your-db-url' JWT_SECRET='your-super-secret' PORT=3000 NODE_ENV=production
+```
 
-Add:
+Set:
 
 - DATABASE_URL
 - JWT_SECRET
 - PORT
 - NODE_ENV=production
 
-#### 6. Deploy
+#### 6. Build for Production
+
+Once you've made changes to your code, run:
+
+```bash
+npm run build
+```
+
+#### 7. Deploy
 
 Once you've made changes to your code, run:
 

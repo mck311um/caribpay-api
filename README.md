@@ -36,6 +36,8 @@ A Caribbean financial services API built with Express.js, TypeScript, and Prisma
 - npm or yarn
 - Git
 - AWS Account
+- pip3
+- AWS CLI
 
 ### Installation
 
