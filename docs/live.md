@@ -39,7 +39,7 @@ Provide your:
 #### 3. Initialize the Project
 
 ```bash
-eb init -p node.js caribpay-api --region us-east-1
+eb init -p node.js caribpay --region us-east-1
 ```
 
 Follow the prompts:
