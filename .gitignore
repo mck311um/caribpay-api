@@ -1,7 +1,9 @@
 node_modules
 dist
+development.zip
 # Keep environment variables out of version control
 .env
+.env.production
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*

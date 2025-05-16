@@ -54,6 +54,8 @@ eb create caribpay-env --platform "Node.js 22 running on 64bit Amazon Linux 2023
 
 #### 5. Add Environment Variables
 
+Update .env.production with your secrets, then run:
+
 ```bash
 eb setenv DATABASE_URL='your-db-url' JWT_SECRET='your-super-secret' PORT=3000 NODE_ENV=production
 ```
@@ -65,15 +67,21 @@ Set:
 - PORT
 - NODE_ENV=production
 
-#### 6. Build for Production
+#### 6. Run Live Migrations
 
-Once you've made changes to your code, run:
+Build your app:
 
 ```bash
 npm run build
 ```
 
-#### 7. Zip the App
+Run migrations loading .env.production:
+
+```bash
+set -o allexport; source .env.production; set +o allexport; ./migrate.sh
+```
+
+#### 8. Zip the App
 
 Prepare a production-ready zip (excluding source and config files):
 
@@ -81,7 +89,7 @@ Prepare a production-ready zip (excluding source and config files):
 zip -r deployment.zip . -x "src/*" "node_modules/*" ".env"
 ```
 
-#### 8. Upload & Deploy via AWS Console
+#### 9. Upload & Deploy via AWS Console
 
 1. Go to the Elastic [Beanstalk Console](https://console.aws.amazon.com/elasticbeanstalk/home)
 2. Select your environment (caribpay-env)
