@@ -18,7 +18,9 @@ Elastic Beanstalk needs permissions to manage resources like S3, RDS, and CloudW
    - `AmazonRDSFullAccess`
    - `IAMFullAccess` (optional, for managing roles)
 
-#### 1. Install Elastic Beanstalk CLI
+#### 1. Install Elastic Beanstalk CLI (optional)
+
+Only needed for environment setup (not for deployment):
 
 ```bash
 pip3 install awsebcli --upgrade --user
@@ -42,14 +44,12 @@ Provide your:
 eb init -p node.js caribpay --region us-east-1
 ```
 
-Follow the prompts:
-
-- Select your AWS keypair or create a new one.
+- Choose or create an AWS keypair if prompted.
 
 #### 4. Create the Environment
 
 ```bash
-eb create caribpay-env
+eb create caribpay-env --platform "Node.js 22 running on 64bit Amazon Linux 2023"
 ```
 
 #### 5. Add Environment Variables
@@ -73,30 +73,25 @@ Once you've made changes to your code, run:
 npm run build
 ```
 
-#### 7. Deploy
+#### 7. Zip the App
 
-Once you've made changes to your code, run:
+Prepare a production-ready zip (excluding source and config files):
 
 ```bash
-eb deploy
+zip -r deployment.zip . -x "src/*" "node_modules/*" ".env"
 ```
 
-This will apply all updates to your live environment.
+#### 8. Upload & Deploy via AWS Console
 
-After deployment, your app will be live at:
+1. Go to the Elastic [Beanstalk Console](https://console.aws.amazon.com/elasticbeanstalk/home)
+2. Select your environment (caribpay-env)
+3. Click Upload and Deploy
+4. Upload deployment.zip
+5. Click Deploy
+
+Your app will now go live at:
 `http://caribpay-env.eba-xyz123.us-east-1.elasticbeanstalk.com`
 
----
-
-### Optional
-
-You can also use the `./deploy.sh` script to automate setup and deployment.
-
-> **Note:** Before running the script, make sure to **update the environment variables** inside `deploy.sh` with your own `DATABASE_URL`, `JWT_SECRET`, and other sensitive values.
-
-```bash
-chmod +x deploy.sh
-./deploy.sh
-```
+(URL will vary depending on your environment name)
 
 ---
