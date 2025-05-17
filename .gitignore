@@ -9,3 +9,4 @@ development.zip
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+deployment.zip

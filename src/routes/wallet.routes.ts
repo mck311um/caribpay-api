@@ -4,6 +4,7 @@ import { auth } from '../middleware/auth';
 
 const router = express.Router();
 
+router.get('/', auth, controller.getAccounts);
 router.get(':accountNumber/history', controller.getTransactionHistory);
 router.get(':accountNumber/balance', auth, controller.getAccountBalance);
 

@@ -3,8 +3,6 @@ model Country {
   name        String    @unique
   code        String    @unique
   currencyId  String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
 
   users       User[]
   accounts    Account[]
@@ -12,7 +10,7 @@ model Country {
 }
 
 model Currency {
-  id          String   @id @default(uuid())
+  id          String    @id @default(dbgenerated("gen_random_uuid()"))
   name        String   @unique
   code        String   @unique
   symbol      String
@@ -24,7 +22,7 @@ model Currency {
 }
 
 model CurrencyExchangeRate {
-  id             String   @id @default(uuid())
+  id              String    @id @default(dbgenerated("gen_random_uuid()"))
   fromCurrencyId String
   toCurrencyId   String
   rate           Decimal

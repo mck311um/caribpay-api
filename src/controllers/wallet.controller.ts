@@ -385,6 +385,30 @@ const deleteAccount = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
+const getAccounts = async (req: Request, res: Response): Promise<any> => {
+  const userId = req.user?.id;
+  const { limit = 20, offset = 0 } = req.query;
+  try {
+    const accounts = await prisma.account.findMany({
+      where: { userId, isDeleted: false },
+      orderBy: { createdAt: 'desc' },
+      take: Number(limit),
+      skip: Number(offset),
+      include: {
+        country: true,
+        currency: true,
+      },
+    });
+
+    return res.status(200).json({
+      message: 'Accounts retrieved successfully',
+      data: accounts,
+    });
+  } catch (error: any) {
+    errorUtil.handleError(error, res, 'retrieving accounts');
+  }
+};
+
 export default {
   transfer,
   internalTransfer,
@@ -393,4 +417,5 @@ export default {
   getTransactionHistory,
   getAccountBalance,
   deleteAccount,
+  getAccounts,
 };

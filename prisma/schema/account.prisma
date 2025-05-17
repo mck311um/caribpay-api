@@ -1,5 +1,5 @@
 model Account {
-  id                    String       @id @default(uuid())
+  id                    String    @id @default(dbgenerated("gen_random_uuid()"))
   name                  String
   userId                String
   currencyId            String       
@@ -18,7 +18,7 @@ model Account {
 }
 
 model Transaction {
-  id                String   @id @default(uuid())
+  id                String    @id @default(dbgenerated("gen_random_uuid()"))
   accountId         String
   amount            Decimal
   fee               Decimal  @default(0)
