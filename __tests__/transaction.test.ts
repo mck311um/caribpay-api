@@ -44,7 +44,7 @@ beforeAll(async () => {
 
   // Register User 1 (Testland)
   const res1 = await request(app).post('/api/v1/auth/register').send({
-    email: 'wallet1@test.com',
+    email: 'account1@test.com',
     password: 'TestPass123!',
     firstName: 'User1',
     lastName: 'Test',
@@ -54,7 +54,7 @@ beforeAll(async () => {
 
   // Register User 2
   const res2 = await request(app).post('/api/v1/auth/register').send({
-    email: 'wallet2@test.com',
+    email: 'account2@test.com',
     password: 'TestPass123!',
     firstName: 'User2',
     lastName: 'Test',
@@ -62,8 +62,8 @@ beforeAll(async () => {
   });
   user2Token = res2.body.token;
 
-  const user1 = await prisma.user.findUnique({ where: { email: 'wallet1@test.com' } });
-  const user2 = await prisma.user.findUnique({ where: { email: 'wallet2@test.com' } });
+  const user1 = await prisma.user.findUnique({ where: { email: 'account1@test.com' } });
+  const user2 = await prisma.user.findUnique({ where: { email: 'account2@test.com' } });
 
   account1 = await prisma.account.create({
     data: {
@@ -89,8 +89,8 @@ beforeAll(async () => {
     },
   });
 
-  account1 = await prisma.account.findFirst({ where: { user: { email: 'wallet1@test.com' } } });
-  account2 = await prisma.account.findFirst({ where: { user: { email: 'wallet2@test.com' } } });
+  account1 = await prisma.account.findFirst({ where: { user: { email: 'account1@test.com' } } });
+  account2 = await prisma.account.findFirst({ where: { user: { email: 'account2@test.com' } } });
 
   exchangeRate = await prisma.currencyExchangeRate.create({
     data: {
@@ -111,15 +111,15 @@ afterAll(async () => {
   await prisma.transaction.deleteMany();
   await prisma.account.deleteMany();
   await prisma.user.deleteMany({
-    where: { email: { in: ['wallet1@test.com', 'wallet2@test.com'] } },
+    where: { email: { in: ['account1@test.com', 'account2@test.com'] } },
   });
   await prisma.$disconnect();
 });
 
-describe('POST /api/v1/wallet/transfer', () => {
+describe('POST /api/v1/transaction/transfer', () => {
   it('should transfer funds between two users', async () => {
     const res = await request(app)
-      .post('/api/v1/wallet/transfer')
+      .post('/api/v1/transaction/transfer')
       .set('x-auth-token', user1Token)
       .send({
         accountNumber: account1.accountNumber,
@@ -140,7 +140,7 @@ describe('POST /api/v1/wallet/transfer', () => {
   });
 });
 
-describe('POST /api/v1/wallet/transfer/internal', () => {
+describe('POST /api/v1/transaction/transfer/internal', () => {
   it('should transfer funds between same user accounts', async () => {
     const newAccount = await prisma.account.create({
       data: {
@@ -155,7 +155,7 @@ describe('POST /api/v1/wallet/transfer/internal', () => {
     });
 
     const res = await request(app)
-      .post('/api/v1/wallet/transfer/internal')
+      .post('/api/v1/transaction/transfer/internal')
       .set('x-auth-token', user1Token)
       .send({
         accountNumber: account1.accountNumber,
@@ -175,10 +175,10 @@ describe('POST /api/v1/wallet/transfer/internal', () => {
   });
 });
 
-describe('POST /api/v1/wallet/fund', () => {
+describe('POST /api/v1/transaction/fund', () => {
   it('should create a pending funding transaction', async () => {
     const res = await request(app)
-      .post('/api/v1/wallet/fund')
+      .post('/api/v1/transaction/fund')
       .set('x-auth-token', user1Token)
       .send({
         accountNumber: account1.accountNumber,
@@ -192,7 +192,7 @@ describe('POST /api/v1/wallet/fund', () => {
   });
 });
 
-describe('PATCH /api/v1/wallet/fund/:id', () => {
+describe('PATCH /api/v1/transaction/fund/:id', () => {
   let pendingFundingId: string;
 
   beforeAll(async () => {
@@ -213,7 +213,7 @@ describe('PATCH /api/v1/wallet/fund/:id', () => {
 
   it('should finalize a pending fund and increase balance', async () => {
     const res = await request(app)
-      .patch(`/api/v1/wallet/fund/${pendingFundingId}`)
+      .patch(`/api/v1/transaction/fund/${pendingFundingId}`)
       .set('x-auth-token', user1Token)
       .send({
         status: 'SUCCESS',
@@ -244,7 +244,7 @@ describe('PATCH /api/v1/wallet/fund/:id', () => {
     });
 
     const res = await request(app)
-      .patch(`/api/v1/wallet/fund/${txn.id}`)
+      .patch(`/api/v1/transaction/fund/${txn.id}`)
       .set('x-auth-token', user1Token)
       .send({
         status: 'INVALID_STATUS',
@@ -256,14 +256,14 @@ describe('PATCH /api/v1/wallet/fund/:id', () => {
   });
 });
 
-describe('POST /api/v1/wallet/transfer', () => {
+describe('POST /api/v1/transaction/transfer', () => {
   it('should transfer funds between two users with different currencies', async () => {
     const amount = 100;
     const fee = 5;
     const reference = 'Test transfer';
 
     const res = await request(app)
-      .post('/api/v1/wallet/transfer')
+      .post('/api/v1/transaction/transfer')
       .set('x-auth-token', user1Token)
       .send({
         accountNumber: account1.accountNumber,

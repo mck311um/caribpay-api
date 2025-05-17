@@ -5,8 +5,9 @@ import cors from 'cors';
 
 import authRoutes from './routes/auth.routes';
 import userRoutes from './routes/user.routes';
-import walletRoutes from './routes/wallet.routes';
+import accountRoutes from './routes/account.routes';
 import adminRoutes from './routes/admin.routes';
+import transactionRoutes from './routes/transaction.routes';
 
 dotenv.config();
 
@@ -20,7 +21,8 @@ app.use(cors());
 // Routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/user', userRoutes);
-app.use('/api/v1/wallet', walletRoutes);
+app.use('/api/v1/account', accountRoutes);
+app.use('/api/v1/transaction', transactionRoutes);
 app.use('/api/v1/admin', adminRoutes);
 
 export default app;

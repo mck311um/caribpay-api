@@ -1,6 +1,6 @@
-# Wallet Endpoints
+# Transaction Endpoints
 
-## POST /wallet/transfer
+## POST /transaction/transfer
 
 ### Purpose:
 
@@ -13,7 +13,7 @@ Transfers funds between two user accounts. Can include currency conversion if ac
 ### Request Format:
 
 ```http
-POST /api/v1/wallet/transfer
+POST /api/v1/transaction/transfer
 ```
 
 ### Request Headers:
@@ -96,7 +96,7 @@ Content-Type: application/json
   - Insufficient balance
   - Deleted account(s)
 
-## POST /wallet/transfer/internal
+## POST /transaction/transfer/internal
 
 ### Purpose:
 
@@ -109,7 +109,7 @@ Transfers funds between a user’s own accounts (same userId, same or different 
 ### Request Format:
 
 ```http
-PATCH /api/v1/wallet/transfer/internal
+PATCH /api/v1/transaction/transfer/internal
 ```
 
 ### Request Headers:
@@ -192,7 +192,7 @@ Content-Type: application/json
   - Insufficient balance
   - Deleted account(s)
 
-## POST /wallet/fund
+## POST /transaction/fund
 
 ### Purpose:
 
@@ -205,7 +205,7 @@ Initiates a deposit to a user’s account. Status will initially be PENDING.
 ### Request Format:
 
 ```http
-PATCH /api/v1/wallet/fund
+PATCH /api/v1/transaction/fund
 ```
 
 ### Request Headers:
@@ -254,7 +254,7 @@ Content-Type: application/json
 - 401 Unauthorized
   - Invalid or missing authentication token
 
-## PATH /wallet/fund/:id
+## PATH /transaction/fund/:id
 
 ### Purpose:
 
@@ -267,7 +267,7 @@ Content-Type: application/json
 ### Request Format:
 
 ```http
-PATCH /api/v1/wallet/fund/:id
+PATCH /api/v1/transaction/fund/:id
 ```
 
 ### Request Headers:
@@ -323,166 +323,3 @@ Content-Type: application/json
 - 400 Bad Request
   - Invalid status
   - Transaction not in PENDING state
-
-## GET /wallet/:accountNumber/balance
-
-### Purpose:
-
-Returns the current balance of a specific account.
-
-### Authorization:
-
-- Authorization Token Required
-
-### Request Format:
-
-```http
-GET /api/v1/wallet/:accountNumber/balance
-```
-
-### Request Headers:
-
-```http
-x-auth-token: <your_jwt_token>
-Content-Type: application/json
-```
-
-### Path Parameters:
-
-| Parameter     | Type   | Description                                                  |
-| ------------- | ------ | ------------------------------------------------------------ |
-| accountNumber | string | The account number for which to retrieve transaction history |
-
-#### Responses
-
-##### Success (200 OK)
-
-```json
-{
-  "message": "Wallet balance retrieved successfully",
-  "data": {
-    "balance": 500.75
-  }
-}
-```
-
-##### Error Responses:
-
-- 401 Unauthorized
-  - Invalid or missing authentication token
-
-## GET /wallet/:accountNumber/history
-
-### Purpose:
-
-Get a list of transactions for a specific account belonging to the authenticated user.
-
-### Authorization:
-
-- Authorization Token Required
-
-### Request Format:
-
-```http
-GET /api/v1/wallet/:accountNumber/history
-```
-
-### Request Headers:
-
-```http
-x-auth-token: <your_jwt_token>
-Content-Type: application/json
-```
-
-### Path Parameters:
-
-| Parameter     | Type   | Description                                                  |
-| ------------- | ------ | ------------------------------------------------------------ |
-| accountNumber | string | The account number for which to retrieve transaction history |
-
-### Query Parameters:
-
-| Parameter | Type   | Description                                           |
-| --------- | ------ | ----------------------------------------------------- |
-| limit     | number | Number of transactions to return (default: 20)        |
-| offset    | number | Number of records to skip for pagination (default: 0) |
-
-#### Responses
-
-##### Success (200 OK)
-
-```json
-{
-  "message": "Transaction history retrieved successfully",
-  "data": [
-    {
-      "id": "string",
-      "accountId": "string",
-      "amount": 100,
-      "fee": 0,
-      "transactionType": "TRANSFER",
-      "status": "COMPLETED",
-      "createdAt": "2025-05-14T00:00:00.000Z",
-      "direction": "INCOMING",
-      ...
-    },
-    ...
-  ]
-}
-```
-
-##### Error Responses:
-
-- 401 Unauthorized
-  - Invalid or missing authentication token
-
-## DELETE /wallet/:accountNumber
-
-### Purpose:
-
-Marks the user’s account as deleted. Only possible if balance is 0 and account is not primary.
-
-### Authorization:
-
-- Authorization Token Required
-
-### Request Format:
-
-```http
-DELETE /api/v1/wallet/:accountNumber
-```
-
-### Request Headers:
-
-```http
-x-auth-token: <your_jwt_token>
-Content-Type: application/json
-```
-
-### Path Parameters:
-
-| Parameter     | Type   | Description                                                  |
-| ------------- | ------ | ------------------------------------------------------------ |
-| accountNumber | string | The account number for which to retrieve transaction history |
-
-### Query Parameters:
-
-| Parameter | Type   | Description                                           |
-| --------- | ------ | ----------------------------------------------------- |
-| limit     | number | Number of transactions to return (default: 20)        |
-| offset    | number | Number of records to skip for pagination (default: 0) |
-
-#### Responses
-
-##### Success (200 OK)
-
-```json
-{
-  "message": "Account deleted successfully"
-}
-```
-
-##### Error Responses:
-
-- 401 Unauthorized
-  - Invalid or missing authentication token

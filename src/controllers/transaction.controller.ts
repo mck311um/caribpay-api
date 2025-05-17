@@ -200,6 +200,37 @@ const internalTransfer = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
+const getTransactionHistory = async (req: Request, res: Response): Promise<any> => {
+  const userId = req.user?.id;
+  const { accountNumber } = req.params;
+  const { limit = 20, offset = 0 } = req.query;
+
+  try {
+    const account = await prisma.account.findUnique({
+      where: { accountNumber },
+      include: { user: true },
+    });
+
+    if (!account) return res.status(404).json({ message: 'Account not found' });
+    if (account.userId !== userId) return res.status(403).json({ message: 'Unauthorized' });
+    if (account.isDeleted) return res.status(400).json({ message: 'Account is deleted' });
+
+    const transactions = await prisma.transaction.findMany({
+      where: { accountId: account.id },
+      orderBy: { createdAt: 'desc' },
+      take: Number(limit),
+      skip: Number(offset),
+    });
+
+    return res.status(200).json({
+      message: 'Transaction history retrieved successfully',
+      data: transactions,
+    });
+  } catch (error: any) {
+    errorUtil.handleError(error, res, 'retrieving transaction history');
+  }
+};
+
 const fundAccount = async (req: Request, res: Response): Promise<any> => {
   const userId = req.user?.id;
   const { accountNumber, amount, fee, reference } = req.body;
@@ -302,120 +333,10 @@ const updateFunding = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-const getTransactionHistory = async (req: Request, res: Response): Promise<any> => {
-  const userId = req.user?.id;
-  const { accountNumber } = req.params;
-  const { limit = 20, offset = 0 } = req.query;
-
-  try {
-    const account = await prisma.account.findUnique({
-      where: { accountNumber },
-      include: { user: true },
-    });
-
-    if (!account) return res.status(404).json({ message: 'Account not found' });
-    if (account.userId !== userId) return res.status(403).json({ message: 'Unauthorized' });
-    if (account.isDeleted) return res.status(400).json({ message: 'Account is deleted' });
-
-    const transactions = await prisma.transaction.findMany({
-      where: { accountId: account.id },
-      orderBy: { createdAt: 'desc' },
-      take: Number(limit),
-      skip: Number(offset),
-    });
-
-    return res.status(200).json({
-      message: 'Transaction history retrieved successfully',
-      data: transactions,
-    });
-  } catch (error: any) {
-    errorUtil.handleError(error, res, 'retrieving transaction history');
-  }
-};
-
-const getAccountBalance = async (req: Request, res: Response): Promise<any> => {
-  const userId = req.user?.id;
-  const { accountNumber } = req.params;
-  try {
-    const account = await prisma.account.findUnique({
-      where: { accountNumber },
-      include: { user: true },
-    });
-
-    if (!account) return res.status(404).json({ message: 'Account not found' });
-    if (account.userId !== userId) return res.status(403).json({ message: 'Unauthorized' });
-    if (account.isDeleted) return res.status(400).json({ message: 'Account is deleted' });
-
-    return res.status(200).json({
-      message: 'Wallet balance retrieved successfully',
-      data: { balance: account.balance },
-    });
-  } catch (error: any) {
-    errorUtil.handleError(error, res, 'retrieving wallet balance');
-  }
-};
-
-const deleteAccount = async (req: Request, res: Response): Promise<any> => {
-  const userId = req.user?.id;
-  const { accountNumber } = req.params;
-  try {
-    const account = await prisma.account.findUnique({
-      where: { accountNumber },
-      include: { user: true },
-    });
-
-    if (!account) return res.status(404).json({ message: 'Account not found' });
-    if (account.userId !== userId) return res.status(403).json({ message: 'Unauthorized' });
-    if (account.isDeleted) return res.status(400).json({ message: 'Account is already deleted' });
-    if (account.balance.gt(0.0))
-      return res.status(400).json({ message: 'Account balance must be 0 before deletion' });
-    if (account.isPrimary)
-      return res.status(400).json({ message: 'Primary account cannot be deleted' });
-
-    await prisma.account.update({
-      where: { id: account.id },
-      data: { isDeleted: true },
-    });
-
-    return res.status(200).json({
-      message: 'Account deleted successfully',
-    });
-  } catch (error: any) {
-    errorUtil.handleError(error, res, 'deleting account');
-  }
-};
-
-const getAccounts = async (req: Request, res: Response): Promise<any> => {
-  const userId = req.user?.id;
-  const { limit = 20, offset = 0 } = req.query;
-  try {
-    const accounts = await prisma.account.findMany({
-      where: { userId, isDeleted: false },
-      orderBy: { createdAt: 'desc' },
-      take: Number(limit),
-      skip: Number(offset),
-      include: {
-        country: true,
-        currency: true,
-      },
-    });
-
-    return res.status(200).json({
-      message: 'Accounts retrieved successfully',
-      data: accounts,
-    });
-  } catch (error: any) {
-    errorUtil.handleError(error, res, 'retrieving accounts');
-  }
-};
-
 export default {
   transfer,
   internalTransfer,
+  getTransactionHistory,
   fundAccount,
   updateFunding,
-  getTransactionHistory,
-  getAccountBalance,
-  deleteAccount,
-  getAccounts,
 };
