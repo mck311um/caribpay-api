@@ -24,4 +24,5 @@ model User {
 
   @@unique([firstName, lastName, dateOfBirth])
 
+  Transaction Transaction[]
 }

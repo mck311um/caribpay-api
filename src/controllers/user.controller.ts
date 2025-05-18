@@ -1,9 +1,33 @@
 import { Request, Response } from 'express';
 import { Prisma, PrismaClient } from '@prisma/client';
 import errorUtil from '../utils/error';
+import functions from '../utils/functions';
 
 const prisma = new PrismaClient();
 
+const getUser = async (req: Request, res: Response): Promise<any> => {
+  const userId = req.user?.id;
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        country: true,
+        accounts: {
+          where: { isDeleted: false },
+          include: { currency: true },
+        },
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    return res.status(200).json(user);
+  } catch (error) {
+    errorUtil.handleError(res, error, 'retrieving user');
+  }
+};
 const updateUser = async (req: Request, res: Response): Promise<any> => {
   const userId = req.user?.id;
   const {
@@ -47,7 +71,7 @@ const updateUser = async (req: Request, res: Response): Promise<any> => {
         },
       });
 
-      const accountNumber = await generateUniqueAccountNumber(tx);
+      const accountNumber = await functions.generateUniqueAccountNumber();
 
       await tx.account.create({
         data: {
@@ -72,21 +96,7 @@ const updateUser = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-const generateUniqueAccountNumber = async (tx: Prisma.TransactionClient): Promise<string> => {
-  let accountNumber = '';
-  let isUnique = false;
-
-  while (!isUnique) {
-    accountNumber = `ACC-${Math.floor(100000 + Math.random() * 900000)}`;
-    const existing = await tx.account.findUnique({
-      where: { accountNumber },
-    });
-    isUnique = !existing;
-  }
-
-  return accountNumber;
-};
-
 export default {
   updateUser,
+  getUser,
 };

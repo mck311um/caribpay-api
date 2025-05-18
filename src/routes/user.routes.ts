@@ -4,6 +4,8 @@ import { auth } from '../middleware/auth';
 
 const router = express.Router();
 
+router.get('/', auth, controller.getUser);
+
 router.patch('/update', auth, controller.updateUser);
 
 export default router;

@@ -85,6 +85,7 @@ const transfer = async (req: Request, res: Response): Promise<any> => {
           direction: 'OUTGOING',
           reference,
           transferGroupId,
+          userId: sendingAccount.userId,
         },
       });
 
@@ -100,6 +101,7 @@ const transfer = async (req: Request, res: Response): Promise<any> => {
           direction: 'INCOMING',
           reference,
           transferGroupId,
+          userId: receivingAccount.userId,
         },
       });
 
@@ -111,7 +113,7 @@ const transfer = async (req: Request, res: Response): Promise<any> => {
       data: result,
     });
   } catch (error: any) {
-    errorUtil.handleError(error, res, 'sending funds');
+    errorUtil.handleError(res, error, 'sending funds');
   }
 };
 
@@ -170,6 +172,7 @@ const internalTransfer = async (req: Request, res: Response): Promise<any> => {
           direction: 'OUTGOING',
           reference,
           transferGroupId,
+          userId: sendingAccount.userId,
         },
       });
 
@@ -185,6 +188,7 @@ const internalTransfer = async (req: Request, res: Response): Promise<any> => {
           direction: 'INCOMING',
           reference,
           transferGroupId,
+          userId: receivingAccount.userId,
         },
       });
 
@@ -196,7 +200,40 @@ const internalTransfer = async (req: Request, res: Response): Promise<any> => {
       data: result,
     });
   } catch (error: any) {
-    errorUtil.handleError(error, res, 'transferring funds');
+    errorUtil.handleError(res, error, 'transferring funds');
+  }
+};
+
+const getTransactions = async (req: Request, res: Response): Promise<any> => {
+  const userId = req.user?.id;
+
+  try {
+    const transactions = await prisma.transaction.findMany({
+      where: {
+        userId,
+      },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        account: {
+          include: {
+            user: true,
+            currency: true,
+            country: true,
+          },
+        },
+      },
+    });
+
+    if (transactions.length === 0) {
+      return res.status(404).json({ message: 'No transactions found' });
+    }
+
+    return res.status(200).json({
+      message: 'Transactions retrieved successfully',
+      data: transactions,
+    });
+  } catch (error: any) {
+    errorUtil.handleError(res, error, 'retrieving transactions');
   }
 };
 
@@ -227,7 +264,7 @@ const getTransactionHistory = async (req: Request, res: Response): Promise<any> 
       data: transactions,
     });
   } catch (error: any) {
-    errorUtil.handleError(error, res, 'retrieving transaction history');
+    errorUtil.handleError(res, error, 'retrieving transaction history');
   }
 };
 
@@ -261,6 +298,7 @@ const fundAccount = async (req: Request, res: Response): Promise<any> => {
           completedAt: new Date(),
           direction: 'INCOMING',
           reference,
+          userId: account.userId,
         },
       });
 
@@ -272,7 +310,7 @@ const fundAccount = async (req: Request, res: Response): Promise<any> => {
       data: result,
     });
   } catch (error: any) {
-    errorUtil.handleError(error, res, 'funding account');
+    errorUtil.handleError(res, error, 'funding account');
   }
 };
 
@@ -329,7 +367,7 @@ const updateFunding = async (req: Request, res: Response): Promise<any> => {
       data: result,
     });
   } catch (error: any) {
-    errorUtil.handleError(error, res, 'updating funding');
+    errorUtil.handleError(res, error, 'updating funding');
   }
 };
 
@@ -338,5 +376,6 @@ export default {
   internalTransfer,
   getTransactionHistory,
   fundAccount,
+  getTransactions,
   updateFunding,
 };

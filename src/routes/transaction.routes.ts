@@ -4,7 +4,8 @@ import { auth } from '../middleware/auth';
 
 const router = express.Router();
 
-router.get(':accountNumber/history', controller.getTransactionHistory);
+router.get('/history', controller.getTransactions);
+router.get('/history/:accountNumber', controller.getTransactionHistory);
 
 router.post('/transfer', auth, controller.transfer);
 router.post('/transfer/internal', auth, controller.internalTransfer);

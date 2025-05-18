@@ -15,22 +15,35 @@ model Account {
   transactions          Transaction[] 
   country               Country?      @relation(fields: [countryId], references: [id])
   currency              Currency      @relation(fields: [currencyId], references: [id])
+
+  peers           Peer[]        @relation("AccountPeers")
 }
 
 model Transaction {
   id                String    @id @default(dbgenerated("gen_random_uuid()"))
+  userId            String
   accountId         String
   amount            Decimal
   fee               Decimal  @default(0)
   transactionType   TransactionType
   status            String   @default("PENDING") 
-  direction        TransactionDirection
+  direction         TransactionDirection
   createdAt         DateTime @default(now())
   completedAt       DateTime?
   reference         String?
   transferGroupId   String?
 
 
-
   account           Account[]
+  user              User      @relation(fields: [userId], references: [id])
+}
+
+model Peer {
+  id              String   @id @default(dbgenerated("gen_random_uuid()"))
+  name            String
+  accountNumber   String  
+  phone           String
+  userId          String
+
+  account         Account  @relation("AccountPeers", fields: [accountNumber], references: [accountNumber])
 }

@@ -5,14 +5,11 @@ import { auth } from '../middleware/auth';
 const router = express.Router();
 
 router.get('/', auth, controller.getAccounts);
-// router.get(':accountNumber/history', controller.getTransactionHistory);
+router.get('/peers', auth, controller.getPeers);
 router.get(':accountNumber/balance', auth, controller.getAccountBalance);
 
-// router.post('/transfer', auth, controller.transfer);
-// router.post('/transfer/internal', auth, controller.internalTransfer);
-// router.post('/fund', auth, controller.fundAccount);
-
-// router.patch('/fund/:id', auth, controller.updateFunding);
+router.post('/', auth, controller.addAccount);
+router.post('/peer', auth, controller.addPeer);
 
 router.delete('/:accountNumber', auth, controller.deleteAccount);
 
